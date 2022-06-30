@@ -6,11 +6,23 @@ namespace Chessington.GameEngine.Pieces
     public class Knight : Piece
     {
         public Knight(Player player)
-            : base(player) { }
+            : base(player)
+        {
+        }
+
+        private Square getMove(Square currentSquare, int rowOffset, int colOffset)
+        {
+            return new Square(currentSquare.Row + rowOffset, currentSquare.Col + colOffset);
+        }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
-            return Enumerable.Empty<Square>();
+            var currentSquare = board.FindPiece(this);
+
+            var rowOffsets = new[] { 1, 1, -1, -1, 2, 2, -2, -2 };
+            var colOffsets = new[] { 2, -2, 2, -2, 1, -1, 1, -1 };
+
+            return rowOffsets.Select((_, i) => getMove(currentSquare, rowOffsets[i], colOffsets[i])).ToList();
         }
     }
 }
