@@ -11,7 +11,7 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
-        private bool ValidSquare(Square square, Board board)
+        private bool ValidSquare(Square square)
         {
             var row = square.Row;
             if (row < 0 || row > 7) return false;
@@ -19,7 +19,7 @@ namespace Chessington.GameEngine.Pieces
             var col = square.Col;
             if (col < 0 || col > 7) return false;
 
-            return board.GetPiece(square) == null;
+            return true;
         }
 
         private List<Square> PrimaryDiagonalMovesDirection(Square currentSquare, Board board, int direction)
@@ -30,7 +30,14 @@ namespace Chessington.GameEngine.Pieces
             {
                 var offset = distance * direction;
                 var nextSquare = new Square(currentSquare.Row + offset, currentSquare.Col + offset);
-                if (!ValidSquare(nextSquare, board)) break;
+                if (!ValidSquare(nextSquare)) break;
+                if (board.GetPiece(nextSquare) != null)
+                {
+                    if (board.GetPiece(nextSquare).Player != Player)
+                        moves.Add(nextSquare);
+
+                    break;
+                }
 
                 moves.Add(nextSquare);
             }
@@ -54,7 +61,14 @@ namespace Chessington.GameEngine.Pieces
             {
                 var offset = distance * direction;
                 var nextSquare = new Square(currentSquare.Row + offset, currentSquare.Col - offset);
-                if (!ValidSquare(nextSquare, board)) break;
+                if (!ValidSquare(nextSquare)) break;
+                if (board.GetPiece(nextSquare) != null)
+                {
+                    if (board.GetPiece(nextSquare).Player != Player)
+                        moves.Add(nextSquare);
+
+                    break;
+                }
 
                 moves.Add(nextSquare);
             }
