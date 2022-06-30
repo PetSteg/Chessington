@@ -38,14 +38,14 @@ namespace Chessington.GameEngine.Pieces
             return board.GetPiece(square).Player == Player;
         }
 
-        private Square GetNextSquare(int distance, int rowDirection, int colDirection)
+        private Square GetNextSquare(int distance, Direction rowDirection, Direction colDirection)
         {
-            var nextRow = currentSquare.Row + distance * rowDirection;
-            var nextCol = currentSquare.Col + distance * colDirection;
+            var nextRow = currentSquare.Row + distance * (int)rowDirection;
+            var nextCol = currentSquare.Col + distance * (int)colDirection;
             return Square.At(nextRow, nextCol);
         }
 
-        private IEnumerable<Square> MovesOnDirection(int rowDirection, int colDirection)
+        private IEnumerable<Square> MovesOnDirection(Direction rowDirection, Direction colDirection)
         {
             var moves = new List<Square>();
 
@@ -71,32 +71,32 @@ namespace Chessington.GameEngine.Pieces
 
         private IEnumerable<Square> PrimaryDiagonalMoves()
         {
-            var movesDownLeft = MovesOnDirection(1, -1);
-            var movesUpRight = MovesOnDirection(-1, 1);
+            var movesDownLeft = MovesOnDirection(Direction.Down, Direction.Left);
+            var movesUpRight = MovesOnDirection(Direction.Up, Direction.Right);
 
             return movesDownLeft.Concat(movesUpRight);
         }
 
         private IEnumerable<Square> SecondaryDiagonalMoves()
         {
-            var movesDownRight = MovesOnDirection(1, 1);
-            var movesUpLeft = MovesOnDirection(-1, -1);
+            var movesDownRight = MovesOnDirection(Direction.Down, Direction.Right);
+            var movesUpLeft = MovesOnDirection(Direction.Up, Direction.Left);
 
             return movesDownRight.Concat(movesUpLeft);
         }
 
         private IEnumerable<Square> HorizontalMoves()
         {
-            var horizontalMovesLeft = MovesOnDirection(0, -1);
-            var horizontalMovesRight = MovesOnDirection(0, 1);
+            var horizontalMovesLeft = MovesOnDirection(Direction.Stay, Direction.Left);
+            var horizontalMovesRight = MovesOnDirection(Direction.Stay, Direction.Right);
             return horizontalMovesLeft.Concat(horizontalMovesRight);
         }
 
         private IEnumerable<Square> VerticalMoves()
         {
-            var verticalMovesLeft = MovesOnDirection(-1, 0);
-            var verticalMovesRight = MovesOnDirection(1, 0);
-            return verticalMovesLeft.Concat(verticalMovesRight);
+            var verticalMovesUp = MovesOnDirection(Direction.Up, Direction.Stay);
+            var verticalMovesDown = MovesOnDirection(Direction.Down, Direction.Stay);
+            return verticalMovesUp.Concat(verticalMovesDown);
         }
 
         protected IEnumerable<Square> LateralMoves()
