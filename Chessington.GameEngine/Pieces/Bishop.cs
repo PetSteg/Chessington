@@ -42,7 +42,7 @@ namespace Chessington.GameEngine.Pieces
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
-            Square currentSquare = board.FindPiece(this);
+            var currentSquare = board.FindPiece(this);
 
             var possibleMoves = PrimaryDiagonalMoves(currentSquare);
             possibleMoves.AddRange(SecondaryDiagonalMoves(currentSquare));
