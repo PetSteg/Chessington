@@ -10,6 +10,17 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
+        private bool ValidSquare(Square square)
+        {
+            var row = square.Row;
+            if (row < 0 || row > 7) return false;
+
+            var col = square.Col;
+            if (col < 0 || col > 7) return false;
+
+            return true;
+        }
+
         private Square GetMove(Square currentSquare, int rowOffset, int colOffset)
         {
             return new Square(currentSquare.Row + rowOffset, currentSquare.Col + colOffset);
@@ -22,7 +33,8 @@ namespace Chessington.GameEngine.Pieces
             var rowOffsets = new[] { 1, 1, -1, -1, 2, 2, -2, -2 };
             var colOffsets = new[] { 2, -2, 2, -2, 1, -1, 1, -1 };
 
-            return rowOffsets.Select((_, i) => GetMove(currentSquare, rowOffsets[i], colOffsets[i])).ToList();
+            return rowOffsets.Select((_, i) => GetMove(currentSquare, rowOffsets[i], colOffsets[i])).Where(ValidSquare)
+                .ToList();
         }
     }
 }
