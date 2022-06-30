@@ -21,6 +21,14 @@ namespace Chessington.GameEngine.Pieces
             return true;
         }
 
+        private bool FriendlySquare(Square square, Board board)
+        {
+            var piece = board.GetPiece(square);
+            if (piece == null) return false;
+
+            return board.GetPiece(square).Player == Player;
+        }
+
         private Square GetMove(Square currentSquare, int rowOffset, int colOffset)
         {
             return new Square(currentSquare.Row + rowOffset, currentSquare.Col + colOffset);
@@ -51,7 +59,8 @@ namespace Chessington.GameEngine.Pieces
         {
             var currentSquare = board.FindPiece(this);
 
-            return StraightMoves(currentSquare).Concat(DiagonalMoves(currentSquare)).Where(ValidSquare);
+            return StraightMoves(currentSquare).Concat(DiagonalMoves(currentSquare)).Where(ValidSquare)
+                .Where(move => !FriendlySquare(move, board));
         }
     }
 }
