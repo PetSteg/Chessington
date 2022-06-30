@@ -19,10 +19,16 @@
         public bool IsInBounds()
         {
             var row = Row;
-            if (row < 0 || row > 7) return false;
+            if (row < 0 || row > 7)
+            {
+                return false;
+            }
 
             var col = Col;
-            if (col < 0 || col > 7) return false;
+            if (col < 0 || col > 7)
+            {
+                return false;
+            }
 
             return true;
         }

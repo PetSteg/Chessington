@@ -19,7 +19,10 @@ namespace Chessington.GameEngine.Pieces
         protected bool OpponentSquare(Square square)
         {
             var piece = board?.GetPiece(square);
-            if (piece == null) return false;
+            if (piece == null)
+            {
+                return false;
+            }
 
             return board.GetPiece(square).Player != Player;
         }
@@ -27,7 +30,10 @@ namespace Chessington.GameEngine.Pieces
         protected bool FriendlySquare(Square square)
         {
             var piece = board?.GetPiece(square);
-            if (piece == null) return false;
+            if (piece == null)
+            {
+                return false;
+            }
 
             return board.GetPiece(square).Player == Player;
         }

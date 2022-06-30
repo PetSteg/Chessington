@@ -26,7 +26,10 @@ namespace Chessington.GameEngine.Pieces
             var possibleMoves = new List<Square>();
 
             var nextSquare = Square.At(currentSquare.Row + 1 * direction, currentSquare.Col);
-            if (!nextSquare.IsInBounds() || board.GetPiece(nextSquare) != null) return possibleMoves;
+            if (!nextSquare.IsInBounds() || board.GetPiece(nextSquare) != null)
+            {
+                return possibleMoves;
+            }
 
             possibleMoves.Add(nextSquare);
             if (NeverMoved())
@@ -47,10 +50,14 @@ namespace Chessington.GameEngine.Pieces
             var nextSquareRight = Square.At(currentSquare.Row + 1 * direction, currentSquare.Col + 1);
 
             if (nextSquareLeft.IsInBounds() && OpponentSquare(nextSquareLeft))
+            {
                 possibleMoves.Add(nextSquareLeft);
+            }
 
             if (nextSquareRight.IsInBounds() && OpponentSquare(nextSquareRight))
+            {
                 possibleMoves.Add(nextSquareRight);
+            }
 
             return possibleMoves;
         }
