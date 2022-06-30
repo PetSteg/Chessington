@@ -19,13 +19,13 @@
         public bool IsInBounds()
         {
             var row = Row;
-            if (row < 0 || row > 7)
+            if (row < 0 || row > GameSettings.BoardSize - 1)
             {
                 return false;
             }
 
             var col = Col;
-            if (col < 0 || col > 7)
+            if (col < 0 || col > GameSettings.BoardSize - 1)
             {
                 return false;
             }

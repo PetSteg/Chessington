@@ -49,7 +49,7 @@ namespace Chessington.GameEngine.Pieces
         {
             var moves = new List<Square>();
 
-            for (var distance = 1; distance < 7; distance++)
+            for (var distance = 1; distance < GameSettings.BoardSize - 1; distance++)
             {
                 var nextSquare = GetNextSquare(distance, rowDirection, colDirection);
                 if (!nextSquare.IsInBounds() || FriendlySquare(nextSquare))
