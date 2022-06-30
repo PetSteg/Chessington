@@ -60,8 +60,8 @@ namespace Chessington.GameEngine.Pieces
 
         private List<Square> VerticalMoves(Square currentSquare, Board board)
         {
-            var verticalMovesLeft = HorizontalMovesDirection(currentSquare, board, -1);
-            var verticalMovesRight = HorizontalMovesDirection(currentSquare, board, 1);
+            var verticalMovesLeft = VerticalMovesDirection(currentSquare, board, -1);
+            var verticalMovesRight = VerticalMovesDirection(currentSquare, board, 1);
             return verticalMovesLeft.Concat(verticalMovesRight).ToList();
         }
 
