@@ -45,7 +45,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         }
 
         [Test]
-        public void BlackPawns_WhichHaveNeverMoved_CanMoveTwoSquareUp()
+        public void BlackPawns_WhichHaveNeverMoved_CanMoveTwoSquareDown()
         {
             var board = new Board();
             var pawn = new Pawn(Player.Black);

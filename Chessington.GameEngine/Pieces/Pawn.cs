@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Chessington.GameEngine.Pieces
@@ -10,20 +11,44 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
-        public override IEnumerable<Square> GetAvailableMoves(Board board)
+        private bool neverMoved(Square currentSquare)
         {
-            var currentSquare = board.FindPiece(this);
-            Square nextSquare;
+            int initialRow;
             if (Player == Player.White)
             {
-                nextSquare = new Square(currentSquare.Row - 1, currentSquare.Col);
+                initialRow = 7;
             }
             else
             {
-                nextSquare = new Square(currentSquare.Row + 1, currentSquare.Col);
+                initialRow = 1;
             }
 
-            return new List<Square> { nextSquare };
+            if (currentSquare.Row == initialRow) return true;
+
+            return false;
+        }
+
+        private List<Square> MoveStraight(Square currentSquare)
+        {
+            // black moves down (+), white moves up (-)
+            int direction = Player == Player.Black ? 1 : -1;
+
+            var possibleMoves = new List<Square>();
+
+            possibleMoves.Add(new Square(currentSquare.Row + 1 * direction, currentSquare.Col));
+            if (neverMoved(currentSquare))
+            {
+                possibleMoves.Add(new Square(currentSquare.Row + 2 * direction, currentSquare.Col));
+            }
+
+            return possibleMoves;
+        }
+
+        public override IEnumerable<Square> GetAvailableMoves(Board board)
+        {
+            var currentSquare = board.FindPiece(this);
+
+            return MoveStraight(currentSquare);
         }
     }
 }
