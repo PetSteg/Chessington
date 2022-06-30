@@ -22,7 +22,15 @@ namespace Chessington.GameEngine.Pieces
             return true;
         }
 
-        private bool neverMoved(Square currentSquare)
+        private bool OpponentSquare(Square square, Board board)
+        {
+            var piece = board.GetPiece(square);
+            if (piece == null) return false;
+
+            return board.GetPiece(square).Player != Player;
+        }
+
+        private bool NeverMoved(Square currentSquare)
         {
             int initialRow;
             if (Player == Player.White)
@@ -34,15 +42,13 @@ namespace Chessington.GameEngine.Pieces
                 initialRow = 1;
             }
 
-            if (currentSquare.Row == initialRow) return true;
-
-            return false;
+            return currentSquare.Row == initialRow;
         }
 
         private List<Square> StraightMoves(Square currentSquare, Board board)
         {
             // black moves down (+), white moves up (-)
-            int direction = Player == Player.Black ? 1 : -1;
+            var direction = Player == Player.Black ? 1 : -1;
 
             var possibleMoves = new List<Square>();
 
@@ -50,9 +56,31 @@ namespace Chessington.GameEngine.Pieces
             if (!ValidSquare(nextSquare) || board.GetPiece(nextSquare) != null) return possibleMoves;
 
             possibleMoves.Add(nextSquare);
-            if (neverMoved(currentSquare))
+            if (NeverMoved(currentSquare))
             {
                 possibleMoves.Add(new Square(currentSquare.Row + 2 * direction, currentSquare.Col));
+            }
+
+            return possibleMoves;
+        }
+
+        private List<Square> DiagonalMoves(Square currentSquare, Board board)
+        {
+            // black moves down (+), white moves up (-)
+            var direction = Player == Player.Black ? 1 : -1;
+
+            var possibleMoves = new List<Square>();
+            var nextSquareLeft = new Square(currentSquare.Row + 1 * direction, currentSquare.Col - 1);
+            var nextSquareRight = new Square(currentSquare.Row + 1 * direction, currentSquare.Col + 1);
+
+            if (ValidSquare(nextSquareLeft) && OpponentSquare(nextSquareLeft, board))
+            {
+                possibleMoves.Add(nextSquareLeft);
+            }
+
+            if (ValidSquare(nextSquareRight) && OpponentSquare(nextSquareRight, board))
+            {
+                possibleMoves.Add(nextSquareRight);
             }
 
             return possibleMoves;
@@ -61,8 +89,10 @@ namespace Chessington.GameEngine.Pieces
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
             var currentSquare = board.FindPiece(this);
+            var straightMoves = StraightMoves(currentSquare, board);
+            var diagonalMoves = DiagonalMoves(currentSquare, board);
 
-            return StraightMoves(currentSquare, board).Where(move => board.GetPiece(move) == null);
+            return straightMoves.Where(move => board.GetPiece(move) == null).Concat(diagonalMoves);
         }
     }
 }
