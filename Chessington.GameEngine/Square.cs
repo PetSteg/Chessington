@@ -16,6 +16,17 @@
             return new Square(row, col);
         }
 
+        public bool IsInBounds()
+        {
+            var row = Row;
+            if (row < 0 || row > 7) return false;
+
+            var col = Col;
+            if (col < 0 || col > 7) return false;
+
+            return true;
+        }
+
         public bool Equals(Square other)
         {
             return Row == other.Row && Col == other.Col;

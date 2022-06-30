@@ -10,57 +10,38 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
-        private bool ValidSquare(Square square)
+        private Square GetMove((int, int) offset)
         {
-            var row = square.Row;
-            if (row < 0 || row > 7) return false;
-
-            var col = square.Col;
-            if (col < 0 || col > 7) return false;
-
-            return true;
-        }
-
-        private bool FriendlySquare(Square square, Board board)
-        {
-            var piece = board.GetPiece(square);
-            if (piece == null) return false;
-
-            return board.GetPiece(square).Player == Player;
-        }
-
-        private Square GetMove(Square currentSquare, int rowOffset, int colOffset)
-        {
+            var (rowOffset, colOffset) = offset;
             return new Square(currentSquare.Row + rowOffset, currentSquare.Col + colOffset);
         }
 
-        private List<Square> GetMovesFromOffsets(Square currentSquare, int[] rowOffsets, int[] colOffsets)
+        private List<Square> GetMovesFromOffsets(IEnumerable<(int, int)> offsets)
         {
-            return rowOffsets.Select((_, i) => GetMove(currentSquare, rowOffsets[i], colOffsets[i])).ToList();
+            return offsets.Select(GetMove).ToList();
         }
 
-        private List<Square> DiagonalMoves(Square currentSquare)
+        private IEnumerable<Square> DiagonalMoves()
         {
-            var rowOffsets = new[] { 1, 1, -1, -1 };
-            var colOffsets = new[] { 1, -1, 1, -1 };
+            var offsets = new List<(int, int)> { (1, 1), (1, -1), (-1, 1), (-1, -1) };
 
-            return GetMovesFromOffsets(currentSquare, rowOffsets, colOffsets);
+            return GetMovesFromOffsets(offsets);
         }
 
-        private List<Square> StraightMoves(Square currentSquare)
+        private IEnumerable<Square> StraightMoves()
         {
-            var rowOffsets = new[] { 0, 0, 1, -1 };
-            var colOffsets = new[] { 1, -1, 0, 0 };
+            var offsets = new List<(int, int)> { (0, 1), (0, -1), (1, 0), (-1, 0) };
 
-            return GetMovesFromOffsets(currentSquare, rowOffsets, colOffsets);
+            return GetMovesFromOffsets(offsets);
         }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
-            var currentSquare = board.FindPiece(this);
+            this.board = board;
+            currentSquare = board.FindPiece(this);
 
-            return StraightMoves(currentSquare).Concat(DiagonalMoves(currentSquare)).Where(ValidSquare)
-                .Where(move => !FriendlySquare(move, board));
+            return StraightMoves().Concat(DiagonalMoves())
+                .Where(move => move.IsInBounds() && !FriendlySquare(move));
         }
     }
 }

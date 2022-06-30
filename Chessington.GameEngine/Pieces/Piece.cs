@@ -6,12 +6,31 @@ namespace Chessington.GameEngine.Pieces
 {
     public abstract class Piece
     {
+        protected Square currentSquare;
+        protected Board board;
+
+        public Player Player { get; private set; }
+
         protected Piece(Player player)
         {
             Player = player;
         }
 
-        public Player Player { get; private set; }
+        protected bool OpponentSquare(Square square)
+        {
+            var piece = board?.GetPiece(square);
+            if (piece == null) return false;
+
+            return board.GetPiece(square).Player != Player;
+        }
+
+        protected bool FriendlySquare(Square square)
+        {
+            var piece = board?.GetPiece(square);
+            if (piece == null) return false;
+
+            return board.GetPiece(square).Player == Player;
+        }
 
         public abstract IEnumerable<Square> GetAvailableMoves(Board board);
 

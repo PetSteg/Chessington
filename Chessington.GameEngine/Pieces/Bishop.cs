@@ -11,31 +11,28 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
-        private bool ValidSquare(Square square)
+        private Square GetNextSquare(int distance, int rowDirection, int colDirection)
         {
-            var row = square.Row;
-            if (row < 0 || row > 7) return false;
-
-            var col = square.Col;
-            if (col < 0 || col > 7) return false;
-
-            return true;
+            var nextRow = currentSquare.Row + distance * rowDirection;
+            var nextCol = currentSquare.Col + distance * colDirection;
+            return Square.At(nextRow, nextCol);
         }
 
-        private List<Square> PrimaryDiagonalMovesDirection(Square currentSquare, Board board, int direction)
+        private IEnumerable<Square> MovesOnDirection(int rowDirection, int colDirection)
         {
             var moves = new List<Square>();
 
             for (var distance = 1; distance < 7; distance++)
             {
-                var offset = distance * direction;
-                var nextSquare = new Square(currentSquare.Row + offset, currentSquare.Col + offset);
-                if (!ValidSquare(nextSquare)) break;
-                if (board.GetPiece(nextSquare) != null)
+                var nextSquare = GetNextSquare(distance, rowDirection, colDirection);
+                if (!nextSquare.IsInBounds() || FriendlySquare(nextSquare))
                 {
-                    if (board.GetPiece(nextSquare).Player != Player)
-                        moves.Add(nextSquare);
+                    break;
+                }
 
+                if (OpponentSquare(nextSquare))
+                {
+                    moves.Add(nextSquare);
                     break;
                 }
 
@@ -45,52 +42,28 @@ namespace Chessington.GameEngine.Pieces
             return moves;
         }
 
-        private List<Square> PrimaryDiagonalMoves(Square currentSquare, Board board)
+        private IEnumerable<Square> PrimaryDiagonalMoves()
         {
-            var movesDownLeft = PrimaryDiagonalMovesDirection(currentSquare, board, -1);
-            var movesUpRight = PrimaryDiagonalMovesDirection(currentSquare, board, 1);
+            var movesDownLeft = MovesOnDirection(1, -1);
+            var movesUpRight = MovesOnDirection(-1, 1);
 
-            return movesDownLeft.Concat(movesUpRight).ToList();
+            return movesDownLeft.Concat(movesUpRight);
         }
 
-        private List<Square> SecondaryDiagonalMovesDirection(Square currentSquare, Board board, int direction)
+        private IEnumerable<Square> SecondaryDiagonalMoves()
         {
-            var moves = new List<Square>();
+            var movesDownRight = MovesOnDirection(1, 1);
+            var movesUpLeft = MovesOnDirection(-1, -1);
 
-            for (var distance = 1; distance < 7; distance++)
-            {
-                var offset = distance * direction;
-                var nextSquare = new Square(currentSquare.Row + offset, currentSquare.Col - offset);
-                if (!ValidSquare(nextSquare)) break;
-                if (board.GetPiece(nextSquare) != null)
-                {
-                    if (board.GetPiece(nextSquare).Player != Player)
-                        moves.Add(nextSquare);
-
-                    break;
-                }
-
-                moves.Add(nextSquare);
-            }
-
-            return moves;
-        }
-
-        private List<Square> SecondaryDiagonalMoves(Square currentSquare, Board board)
-        {
-            var movesDownRight = SecondaryDiagonalMovesDirection(currentSquare, board, -1);
-            var movesUpLeft = SecondaryDiagonalMovesDirection(currentSquare, board, 1);
-
-            return movesDownRight.Concat(movesUpLeft).ToList();
+            return movesDownRight.Concat(movesUpLeft);
         }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
-            var currentSquare = board.FindPiece(this);
-            var primaryDiagonalMoves = PrimaryDiagonalMoves(currentSquare, board);
-            var secondaryDiagonalMoves = SecondaryDiagonalMoves(currentSquare, board);
+            this.board = board;
+            currentSquare = board.FindPiece(this);
 
-            return primaryDiagonalMoves.Concat(secondaryDiagonalMoves);
+            return PrimaryDiagonalMoves().Concat(SecondaryDiagonalMoves());
         }
     }
 }
