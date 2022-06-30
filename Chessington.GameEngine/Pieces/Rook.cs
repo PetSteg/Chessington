@@ -52,7 +52,7 @@ namespace Chessington.GameEngine.Pieces
 
         private List<Square> VerticalMovesDirection(Square currentSquare, Board board, int direction)
         {
-            var horizontalMoves = new List<Square>();
+            var verticalMoves = new List<Square>();
 
             for (var distance = 1; distance < 8; distance++)
             {
@@ -61,15 +61,15 @@ namespace Chessington.GameEngine.Pieces
                 if (board.GetPiece(nextSquare) != null)
                 {
                     if (board.GetPiece(nextSquare).Player != Player)
-                        horizontalMoves.Add(nextSquare);
+                        verticalMoves.Add(nextSquare);
 
                     break;
                 }
 
-                horizontalMoves.Add(nextSquare);
+                verticalMoves.Add(nextSquare);
             }
 
-            return horizontalMoves;
+            return verticalMoves;
         }
 
         private List<Square> VerticalMoves(Square currentSquare, Board board)
