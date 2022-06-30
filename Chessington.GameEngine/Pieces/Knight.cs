@@ -33,8 +33,7 @@ namespace Chessington.GameEngine.Pieces
             var rowOffsets = new[] { 1, 1, -1, -1, 2, 2, -2, -2 };
             var colOffsets = new[] { 2, -2, 2, -2, 1, -1, 1, -1 };
 
-            return rowOffsets.Select((_, i) => GetMove(currentSquare, rowOffsets[i], colOffsets[i])).Where(ValidSquare)
-                .ToList();
+            return rowOffsets.Select((_, i) => GetMove(currentSquare, rowOffsets[i], colOffsets[i])).Where(ValidSquare);
         }
     }
 }
