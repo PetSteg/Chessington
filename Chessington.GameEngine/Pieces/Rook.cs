@@ -10,26 +10,69 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
-        private List<Square> HorizontalMoves(Square currentSquare)
+        private bool ValidSquare(Square square)
         {
-            return Enumerable.Range(0, 8).Where(x => x != currentSquare.Col)
-                .Select(col => new Square(currentSquare.Row, col)).ToList();
+            var row = square.Row;
+            if (row < 0 || row > 7) return false;
+
+            var col = square.Col;
+            if (col < 0 || col > 7) return false;
+
+            return true;
         }
 
-        private List<Square> VerticalMoves(Square currentSquare)
+        private List<Square> HorizontalMovesDirection(Square currentSquare, Board board, int direction)
         {
-            return Enumerable.Range(0, 8).Where(x => x != currentSquare.Row)
-                .Select(row => new Square(row, currentSquare.Col)).ToList();
+            var horizontalMoves = new List<Square>();
+
+            for (var distance = 1; distance < 8; distance++)
+            {
+                var nextSquare = new Square(currentSquare.Row, currentSquare.Col + distance * direction);
+                if (!ValidSquare(nextSquare) || board.GetPiece(nextSquare) != null) break;
+
+                horizontalMoves.Add(nextSquare);
+            }
+
+            return horizontalMoves;
+        }
+
+        private List<Square> HorizontalMoves(Square currentSquare, Board board)
+        {
+            var horizontalMovesLeft = HorizontalMovesDirection(currentSquare, board, -1);
+            var horizontalMovesRight = HorizontalMovesDirection(currentSquare, board, 1);
+            return horizontalMovesLeft.Concat(horizontalMovesRight).ToList();
+        }
+
+        private List<Square> VerticalMovesDirection(Square currentSquare, Board board, int direction)
+        {
+            var horizontalMoves = new List<Square>();
+
+            for (var distance = 1; distance < 8; distance++)
+            {
+                var nextSquare = new Square(currentSquare.Row + distance * direction, currentSquare.Col);
+                if (!ValidSquare(nextSquare) || board.GetPiece(nextSquare) != null) break;
+
+                horizontalMoves.Add(nextSquare);
+            }
+
+            return horizontalMoves;
+        }
+
+        private List<Square> VerticalMoves(Square currentSquare, Board board)
+        {
+            var verticalMovesLeft = HorizontalMovesDirection(currentSquare, board, -1);
+            var verticalMovesRight = HorizontalMovesDirection(currentSquare, board, 1);
+            return verticalMovesLeft.Concat(verticalMovesRight).ToList();
         }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
             var currentSquare = board.FindPiece(this);
 
-            var possibleMoves = HorizontalMoves(currentSquare);
-            possibleMoves.AddRange(VerticalMoves(currentSquare));
+            var horizontalMoves = HorizontalMoves(currentSquare, board);
+            var verticalMoves = VerticalMoves(currentSquare, board);
 
-            return possibleMoves;
+            return horizontalMoves.Concat(verticalMoves);
         }
     }
 }
