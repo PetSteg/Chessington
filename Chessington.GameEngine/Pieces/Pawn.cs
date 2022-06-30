@@ -28,7 +28,7 @@ namespace Chessington.GameEngine.Pieces
             return false;
         }
 
-        private List<Square> MoveStraight(Square currentSquare)
+        private List<Square> StraightMoves(Square currentSquare)
         {
             // black moves down (+), white moves up (-)
             int direction = Player == Player.Black ? 1 : -1;
@@ -48,7 +48,7 @@ namespace Chessington.GameEngine.Pieces
         {
             var currentSquare = board.FindPiece(this);
 
-            return MoveStraight(currentSquare);
+            return StraightMoves(currentSquare);
         }
     }
 }
