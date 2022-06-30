@@ -10,7 +10,7 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
-        private Square getMove(Square currentSquare, int rowOffset, int colOffset)
+        private Square GetMove(Square currentSquare, int rowOffset, int colOffset)
         {
             return new Square(currentSquare.Row + rowOffset, currentSquare.Col + colOffset);
         }
@@ -22,7 +22,7 @@ namespace Chessington.GameEngine.Pieces
             var rowOffsets = new[] { 1, 1, -1, -1, 2, 2, -2, -2 };
             var colOffsets = new[] { 2, -2, 2, -2, 1, -1, 1, -1 };
 
-            return rowOffsets.Select((_, i) => getMove(currentSquare, rowOffsets[i], colOffsets[i])).ToList();
+            return rowOffsets.Select((_, i) => GetMove(currentSquare, rowOffsets[i], colOffsets[i])).ToList();
         }
     }
 }
