@@ -11,6 +11,17 @@ namespace Chessington.GameEngine.Pieces
         {
         }
 
+        private bool ValidSquare(Square square)
+        {
+            var row = square.Row;
+            if (row < 0 || row > 7) return false;
+
+            var col = square.Col;
+            if (col < 0 || col > 7) return false;
+
+            return true;
+        }
+
         private bool neverMoved(Square currentSquare)
         {
             int initialRow;
@@ -36,7 +47,7 @@ namespace Chessington.GameEngine.Pieces
             var possibleMoves = new List<Square>();
 
             var nextSquare = new Square(currentSquare.Row + 1 * direction, currentSquare.Col);
-            if (board.GetPiece(nextSquare) != null) return possibleMoves;
+            if (!ValidSquare(nextSquare) || board.GetPiece(nextSquare) != null) return possibleMoves;
 
             possibleMoves.Add(nextSquare);
             if (neverMoved(currentSquare))
