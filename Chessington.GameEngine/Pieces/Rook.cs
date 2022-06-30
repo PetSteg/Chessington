@@ -28,7 +28,14 @@ namespace Chessington.GameEngine.Pieces
             for (var distance = 1; distance < 8; distance++)
             {
                 var nextSquare = new Square(currentSquare.Row, currentSquare.Col + distance * direction);
-                if (!ValidSquare(nextSquare) || board.GetPiece(nextSquare) != null) break;
+                if (!ValidSquare(nextSquare)) break;
+                if (board.GetPiece(nextSquare) != null)
+                {
+                    if (board.GetPiece(nextSquare).Player != Player)
+                        horizontalMoves.Add(nextSquare);
+
+                    break;
+                }
 
                 horizontalMoves.Add(nextSquare);
             }
@@ -50,7 +57,14 @@ namespace Chessington.GameEngine.Pieces
             for (var distance = 1; distance < 8; distance++)
             {
                 var nextSquare = new Square(currentSquare.Row + distance * direction, currentSquare.Col);
-                if (!ValidSquare(nextSquare) || board.GetPiece(nextSquare) != null) break;
+                if (!ValidSquare(nextSquare)) break;
+                if (board.GetPiece(nextSquare) != null)
+                {
+                    if (board.GetPiece(nextSquare).Player != Player)
+                        horizontalMoves.Add(nextSquare);
+
+                    break;
+                }
 
                 horizontalMoves.Add(nextSquare);
             }
