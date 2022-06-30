@@ -14,15 +14,11 @@ namespace Chessington.GameEngine.Pieces
         private bool NeverMoved()
         {
             var initialRow = Player == Player.White ? 7 : 1;
-
             return currentSquare.Row == initialRow;
         }
 
-        private IEnumerable<Square> StraightMoves()
+        private IEnumerable<Square> StraightMoves(int direction)
         {
-            // black moves down (+), white moves up (-)
-            var direction = Player == Player.Black ? 1 : -1;
-
             var possibleMoves = new List<Square>();
 
             var nextSquare = Square.At(currentSquare.Row + 1 * direction, currentSquare.Col);
@@ -37,23 +33,20 @@ namespace Chessington.GameEngine.Pieces
                 possibleMoves.Add(Square.At(currentSquare.Row + 2 * direction, currentSquare.Col));
             }
 
-            return possibleMoves;
+            return possibleMoves.Where(move => board.GetPiece(move) == null);
         }
 
-        private IEnumerable<Square> DiagonalMoves()
+        private IEnumerable<Square> DiagonalMoves(int direction)
         {
-            // black moves down (+), white moves up (-)
-            var direction = Player == Player.Black ? 1 : -1;
-
             var possibleMoves = new List<Square>();
-            var nextSquareLeft = Square.At(currentSquare.Row + 1 * direction, currentSquare.Col - 1);
-            var nextSquareRight = Square.At(currentSquare.Row + 1 * direction, currentSquare.Col + 1);
 
+            var nextSquareLeft = Square.At(currentSquare.Row + 1 * direction, currentSquare.Col - 1);
             if (nextSquareLeft.IsInBounds() && OpponentSquare(nextSquareLeft))
             {
                 possibleMoves.Add(nextSquareLeft);
             }
 
+            var nextSquareRight = Square.At(currentSquare.Row + 1 * direction, currentSquare.Col + 1);
             if (nextSquareRight.IsInBounds() && OpponentSquare(nextSquareRight))
             {
                 possibleMoves.Add(nextSquareRight);
@@ -67,7 +60,10 @@ namespace Chessington.GameEngine.Pieces
             this.board = board;
             currentSquare = board.FindPiece(this);
 
-            return StraightMoves().Where(move => board.GetPiece(move) == null).Concat(DiagonalMoves());
+            // black moves down (+), white moves up (-)
+            var direction = Player == Player.Black ? 1 : -1;
+
+            return StraightMoves(direction).Concat(DiagonalMoves(direction));
         }
     }
 }
