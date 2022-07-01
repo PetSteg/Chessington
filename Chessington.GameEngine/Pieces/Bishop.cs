@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Chessington.GameEngine.Pieces
@@ -6,11 +7,16 @@ namespace Chessington.GameEngine.Pieces
     public class Bishop : Piece
     {
         public Bishop(Player player)
-            : base(player) { }
+            : base(player)
+        {
+        }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
-            return Enumerable.Empty<Square>();
+            this.board = board;
+            currentSquare = board.FindPiece(this);
+
+            return DiagonalMoves();
         }
     }
 }

@@ -16,6 +16,21 @@
             return new Square(row, col);
         }
 
+        public bool IsInBounds()
+        {
+            if (Row < 0 || Row > GameSettings.BoardSize - 1)
+            {
+                return false;
+            }
+
+            if (Col < 0 || Col > GameSettings.BoardSize - 1)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public bool Equals(Square other)
         {
             return Row == other.Row && Col == other.Col;

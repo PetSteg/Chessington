@@ -6,11 +6,16 @@ namespace Chessington.GameEngine.Pieces
     public class Queen : Piece
     {
         public Queen(Player player)
-            : base(player) { }
+            : base(player)
+        {
+        }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
-            return Enumerable.Empty<Square>();
+            this.board = board;
+            currentSquare = board.FindPiece(this);
+
+            return LateralMoves().Concat(DiagonalMoves());
         }
     }
 }
