@@ -18,14 +18,12 @@
 
         public bool IsInBounds()
         {
-            var row = Row;
-            if (row < 0 || row > GameSettings.BoardSize - 1)
+            if (Row < 0 || Row > GameSettings.BoardSize - 1)
             {
                 return false;
             }
 
-            var col = Col;
-            if (col < 0 || col > GameSettings.BoardSize - 1)
+            if (Col < 0 || Col > GameSettings.BoardSize - 1)
             {
                 return false;
             }
