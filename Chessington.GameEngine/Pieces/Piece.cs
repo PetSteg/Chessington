@@ -18,24 +18,14 @@ namespace Chessington.GameEngine.Pieces
 
         protected bool OpponentSquare(Square square)
         {
-            var piece = board?.GetPiece(square);
-            if (piece == null)
-            {
-                return false;
-            }
+            var playerOfSquare = board?.GetPiece(square)?.Player;
 
-            return board.GetPiece(square).Player != Player;
+            return playerOfSquare != null && playerOfSquare != Player;
         }
 
         protected bool FriendlySquare(Square square)
         {
-            var piece = board?.GetPiece(square);
-            if (piece == null)
-            {
-                return false;
-            }
-
-            return board.GetPiece(square).Player == Player;
+            return board?.GetPiece(square)?.Player == Player;
         }
 
         private Square GetNextSquare(int distance, Direction rowDirection, Direction colDirection)
