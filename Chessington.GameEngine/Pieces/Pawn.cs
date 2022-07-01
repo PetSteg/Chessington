@@ -13,7 +13,7 @@ namespace Chessington.GameEngine.Pieces
 
         private bool NeverMoved()
         {
-            var initialRow = Player == Player.White ? 7 : 1;
+            var initialRow = Player == Player.White ? GameSettings.BoardSize - 1 : 1;
             return currentSquare.Row == initialRow;
         }
 
